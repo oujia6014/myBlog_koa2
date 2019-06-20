@@ -8,7 +8,8 @@ const logger = require('koa-logger') //日志处理
 
 //路由引入
 const index = require('./routes/index')
-const users = require('./routes/users')
+const user = require('./routes/user')
+const blog = require('./routes/blog')
 
 //错误处理
 onerror(app)
@@ -38,8 +39,8 @@ app.use(async (ctx, next) => {
 
 // 路由处理
 app.use(index.routes(), index.allowedMethods())
-app.use(users.routes(), users.allowedMethods())
-
+app.use(user.routes(), user.allowedMethods())
+app.use(blog.routes(), blog.allowedMethods())
 // 错误处理
 app.on('error', (err, ctx) => {
   console.error('server error', err, ctx)
