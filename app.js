@@ -8,6 +8,11 @@ const logger = require('koa-logger') //日志处理
 const session = require('koa-generic-session') //session
 const redisStore = require('koa-redis')
 const {REDIS_CONF} = require('./config/db')
+const fs = require('fs')
+const path = require('path')
+const morgan = require('koa-morgan') //日志处理
+
+
 
 //路由引入
 const index = require('./routes/index')
@@ -57,6 +62,22 @@ app.use(
         })
     })
 )
+
+// 日志输出
+const ENV = process.env.NODE_ENV
+if (ENV !== 'production') {
+    app.use(morgan('dev'));
+} else {
+    const logFileName = path.join(__dirname, 'logs', 'access.log')
+    const writeStream = fs.createWriteStream(logFileName, {
+        flags: 'a'
+    })
+    app.use(morgan('combined', {
+        stream: writeStream
+    }))
+}
+
+
 
 //路由处理
 app.use(index.routes(), index.allowedMethods())
