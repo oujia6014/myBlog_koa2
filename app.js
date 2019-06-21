@@ -7,6 +7,7 @@ const bodyparser = require('koa-bodyparser') //postdata处理
 const logger = require('koa-logger') //日志处理
 const session = require('koa-generic-session') //session
 const redisStore = require('koa-redis')
+const {REDIS_CONF} = require('./config/db')
 
 //路由引入
 const index = require('./routes/index')
@@ -52,11 +53,10 @@ app.use(
             maxAge: 24 * 60 * 60 * 1000
         },
         stroe: redisStore({
-            all: '127.0.0.1:6379'
+            all: `${REDIS_CONF.host}:${REDIS_CONF.prot}`
         })
     })
 )
-
 
 //路由处理
 app.use(index.routes(), index.allowedMethods())
